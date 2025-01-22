@@ -1,12 +1,38 @@
-import PostCard from "./PostCard"
+import PostCard from "./PostCard";
+import axios from "axios";
+import { useEffect, useState } from 'react';
 
 const PostList = () => {
+
+    const baseApiUrl = 'http://localhost:3001';
+
+    const [posts, setPosts] = useState([])
+
+    const fetchPosts = () => {
+        axios.get(`${baseApiUrl}/posts`)
+            .then(res => {
+                setPosts(res.data)
+            })
+            .catch(error => {
+                console.error('Errore durante il caricamento dei post')
+            })
+    }
+
+    useEffect(() => {
+        fetchPosts()
+    }, [])
     return (
         <>
             <div className="container my-5">
                 <h1 className="text-center">I miei Post</h1>
                 <div className="row">
-                    <PostCard />
+                    {posts.map(post => (
+                        <PostCard
+                            key={posts.id}
+                            post={post}
+                        />
+
+                    ))}
 
                 </div>
 

@@ -1,14 +1,15 @@
 const PostCard = (props) => {
+    const { title, content, image } = props.post
 
 
     return (
         <div className="col-12 col-md-6 col-lg-4 mb-3">
 
             <div className="card">
-                <img src="" alt="" />
+                <img src={image} alt={title} />
                 <div className="card-body">
-                    <h5 className="card-title"> Titolo Post </h5>
-                    <p className="card-text"></p>
+                    <h5 className="card-title"> {title} </h5>
+                    <p className="card-text">{content}</p>
                     <div className="btn btn-danger">
                         Elimina
                     </div>
