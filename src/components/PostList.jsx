@@ -18,6 +18,16 @@ const PostList = () => {
             })
     }
 
+    const handleDeletePost = (id) => {
+        axios.delete(`${baseApiUrl}/posts/${id}`)
+            .then(res => {
+                fetchPosts()
+            })
+            .catch(error => {
+                console.error('Errore', error)
+            })
+    }
+
     useEffect(() => {
         fetchPosts()
     }, [])
@@ -30,6 +40,7 @@ const PostList = () => {
                         <PostCard
                             key={posts.id}
                             post={post}
+                            onDelete={() => handleDeletePost(post.id)}
                         />
 
                     ))}
