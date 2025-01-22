@@ -4,9 +4,24 @@ import { useEffect, useState } from 'react';
 
 const PostList = () => {
 
+    const initialFormData = {
+        title: '',
+        image: '',
+        content: ''
+    }
+
     const baseApiUrl = 'http://localhost:3001';
 
     const [posts, setPosts] = useState([])
+    const [formData, setFormData] = useState(initialFormData);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value
+        }))
+    }
 
     const fetchPosts = () => {
         axios.get(`${baseApiUrl}/posts`)
@@ -28,6 +43,22 @@ const PostList = () => {
             })
     }
 
+    const handleAddPost = (e) => {
+        e.preventDefault();
+
+        const newPost = { ...formData }
+
+        axios.post(`${baseApiUrl}/posts`, newPost)
+            .then(res => {
+                console.log(res.data)
+                setPosts((prevPosts) => [...prevPosts, res.data])
+                setFormData(initialFormData)
+            })
+
+    }
+
+
+
     useEffect(() => {
         fetchPosts()
     }, [])
@@ -38,7 +69,7 @@ const PostList = () => {
                 <div className="row">
                     {posts.map(post => (
                         <PostCard
-                            key={posts.id}
+                            key={post.id}
                             post={post}
                             onDelete={() => handleDeletePost(post.id)}
                         />
@@ -63,6 +94,8 @@ const PostList = () => {
                                     name="image"
                                     className="form-control"
                                     placeholder="URL immagine"
+                                    value={formData.image}
+                                    onChange={handleInputChange}
 
                                 />
                             </div>
@@ -74,6 +107,8 @@ const PostList = () => {
                                     name="title"
                                     className="form-control"
                                     placeholder="Titolo"
+                                    value={formData.title}
+                                    onChange={handleInputChange}
 
                                 />
                             </div>
@@ -85,11 +120,13 @@ const PostList = () => {
                                     name="content"
                                     className="form-control"
                                     placeholder="Inserisci il contenuto del Post"
+                                    value={formData.content}
+                                    onChange={handleInputChange}
 
                                 />
                             </div>
                             <div className="m-3">
-                                <button className="btn btn-primary" type="submit">
+                                <button className="btn btn-primary" type="submit" onClick={handleAddPost}>
                                     Add
                                 </button>
                             </div>
